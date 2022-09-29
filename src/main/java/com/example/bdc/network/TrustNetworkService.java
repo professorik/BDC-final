@@ -1,10 +1,10 @@
-package com.example.bdc.domain;
+package com.example.bdc.network;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 @Service
 @Slf4j
-public class MyService {
+public class TrustNetworkService {
 
 }

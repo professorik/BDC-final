@@ -8,8 +8,8 @@ import org.springframework.cache.annotation.EnableCaching;
 @SpringBootApplication
 @EnableCaching
 @EnableConfigurationProperties
-public class BdcApplication {
+public class BackApplication {
     public static void main(String[] args) {
-        SpringApplication.run(BdcApplication.class, args);
+        SpringApplication.run(BackApplication.class, args);
     }
 }
