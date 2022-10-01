@@ -7,34 +7,25 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/people")
 public class UserController {
+
     @Autowired
     private UserService userService;
 
-    @GetMapping("/{id}")
-    public UserDto getUser(@PathVariable Integer id) {
-        return userService.getUserById(id)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found"));
-    }
-
-    @GetMapping
-    public List<UserDto> getUser() {
-        return userService.getUsers();
-    }
-
+    @ResponseStatus(HttpStatus.CREATED)
     @PostMapping
-    public Integer createUser(@RequestBody CreateUserDto user) {
-        return userService.createUser(user)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "Can not create user."));
+    public UserDto createUpdateUser(@RequestBody CreateUserDto user) {
+        return userService.createUpdateUsers(user)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "Cannot create the user"));
     }
 
-    @PostMapping("/{id}/trust_connections")
-    public Integer addTrustConnection(@RequestBody CreateUserDto user) {
-        return userService.createUser(user)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "Can not create user."));
+    @ResponseStatus(HttpStatus.CREATED)
+    @PostMapping("/{name}/trust_connections")
+    public void addTrustConnection(@PathVariable String name, @RequestBody Map<String, Integer> connections) {
+        userService.addTrustConnection(name, connections);
     }
 }
