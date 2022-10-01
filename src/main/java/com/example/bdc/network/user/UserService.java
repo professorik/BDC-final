@@ -41,9 +41,11 @@ public class UserService {
     @Transactional
     public void addTrustConnection(String name, Map<String, Integer> connections) {
         var benefactor = userRepository.findByName(name).orElseThrow();
-        connections.forEach((k, v) -> {
-            var beneficiary = userRepository.findByName(k);
-            beneficiary.ifPresent(user -> connectionRepository.save(benefactor, user, v));
+        connections.forEach((toName, level) -> {
+            if (toName.equals(name)) return;
+            var beneficiary = userRepository.findByName(toName);
+            beneficiary.ifPresent(user -> connectionRepository.save(benefactor, user, level));
         });
+        System.out.println(benefactor);
     }
 }

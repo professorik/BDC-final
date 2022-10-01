@@ -38,7 +38,7 @@ public class User {
     @Builder.Default
     private Set<Topic> topics = new HashSet<>();
 
-    @OneToMany(mappedBy = "from", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "from")
     @Builder.Default
     private Set<TrustConnection> connections = new HashSet<>();
 
@@ -46,5 +46,24 @@ public class User {
         return User.builder()
                 .name(user.getName())
                 .build();
+    }
+
+    @Override
+    public String toString() {
+        final StringBuffer sb = new StringBuffer("User{");
+        sb.append("\nid=").append(id);
+        sb.append("\nname='").append(name).append('\'');
+        sb.append("\ntopics=").append(topics.stream().map(Topic::getName).toList());
+        sb.append("\nconnections:\n");
+        for (TrustConnection con: connections) {
+            sb.append("[user_id: ").
+                    append(con.getToName()).
+                    append(", ").
+                    append("level: ").
+                    append(con.getLevel()).
+                    append("]\n");
+        }
+        sb.append('}');
+        return sb.toString();
     }
 }

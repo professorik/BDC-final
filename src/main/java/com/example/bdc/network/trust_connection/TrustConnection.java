@@ -1,16 +1,15 @@
 package com.example.bdc.network.trust_connection;
 
 import com.example.bdc.network.user.User;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
+import java.io.Serializable;
+import java.util.Objects;
 
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Data
 @Table(name = "trust_levels")
 public class TrustConnection {
 
@@ -18,20 +17,50 @@ public class TrustConnection {
     private TrustConnectionPK id;
 
     @ManyToOne
-    @JoinColumn(name = "BENEFACTOR_ID", insertable = false, updatable = false)
+    @JoinColumn(name = "benefactor_id", insertable = false, updatable = false)
     private User from;
 
     @ManyToOne
-    @JoinColumn(name = "BENEFICIARY_ID", insertable = false, updatable = false)
+    @JoinColumn(name = "beneficiary_id", insertable = false, updatable = false)
     private User to;
 
     @Column
+    @Getter
+    @Setter
     private Integer level;
 
     public TrustConnection(User from, User to, Integer level) {
-        this.id = new TrustConnectionPK(from.getId(), to.getId());
+        id = new TrustConnectionPK(from.getId(), to.getId());
         this.from = from;
         this.to = to;
         this.level = level;
+    }
+
+    public String getToName() {
+        return to.getName();
+    }
+
+    @AllArgsConstructor
+    @NoArgsConstructor
+    @Embeddable
+    public static class TrustConnectionPK implements Serializable {
+
+        @Column(name = "BENEFACTOR_ID")
+        private Integer benefactor_id;
+
+        @Column(name = "BENEFICIARY_ID")
+        private Integer beneficiary_id;
+
+        @Override
+        public boolean equals(Object o) {
+            if (!(o instanceof TrustConnectionPK that)) return false;
+            return Objects.equals(benefactor_id, that.benefactor_id) &&
+                    Objects.equals(beneficiary_id, that.beneficiary_id);
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hash(benefactor_id, beneficiary_id);
+        }
     }
 }

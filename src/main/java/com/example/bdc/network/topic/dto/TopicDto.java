@@ -7,7 +7,9 @@ import lombok.Data;
 @Data
 @Builder
 public class TopicDto {
+
     private Integer id;
+
     private String name;
 
     public static TopicDto fromEntity(Topic topic) {
