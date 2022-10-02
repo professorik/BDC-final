@@ -9,16 +9,17 @@ import java.util.Optional;
 
 
 public interface TrustConnectionRepository extends JpaRepository<TrustConnection, TrustConnection.TrustConnectionPK> {
+
     @Transactional
     @Modifying
-    default TrustConnection save(User from, User to, Integer level) {
+    default void save(User from, User to, Integer level) {
         var connection = findByFromAndTo(from, to);
         TrustConnection kar = new TrustConnection(from, to, level);
         if (connection.isPresent()) {
             kar = connection.get();
             kar.setLevel(level);
         }
-        return save(kar);
+        save(kar);
     }
 
     Optional<TrustConnection> findByFromAndTo(User from, User to);

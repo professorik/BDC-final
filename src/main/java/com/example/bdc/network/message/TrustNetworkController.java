@@ -1,4 +1,4 @@
-package com.example.bdc.network;
+package com.example.bdc.network.message;
 
 import com.example.bdc.network.message.dto.MessageDto;
 import com.example.bdc.network.message.dto.ResponseDto;
@@ -7,12 +7,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.ResponseStatus;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 
 @RestController
@@ -25,14 +23,9 @@ public class TrustNetworkController {
 
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping("messages")
-    public Map<String, Set<String>> addMessage(@RequestBody MessageDto message) {
-        return service.addMessage(message);
-    }
-
-    @ResponseStatus(HttpStatus.CREATED)
-    @PostMapping("messages/bonus")
-    public Map<String, Set<String>> addMessageBonus(@RequestBody MessageDto message) {
-        return service.addMessageBonus(message);
+    public Map<String, Set<String>> addMessage(@RequestParam Optional<Boolean> bonus, @RequestBody MessageDto message) {
+        var isBonus = bonus.orElse(Boolean.FALSE);
+        return service.addMessage(message, isBonus);
     }
 
     @ResponseStatus(HttpStatus.CREATED)

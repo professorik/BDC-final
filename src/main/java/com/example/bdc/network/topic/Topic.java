@@ -1,6 +1,5 @@
 package com.example.bdc.network.topic;
 
-import com.example.bdc.network.topic.dto.TopicDto;
 import com.example.bdc.network.user.User;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
@@ -29,14 +28,6 @@ public class Topic {
     @ManyToMany(mappedBy = "topics", cascade = CascadeType.ALL)
     @Builder.Default
     private Set<User> users = new HashSet<>();
-
-
-    public static Topic fromDto(TopicDto topic) {
-        return Topic.builder()
-                .id(topic.getId())
-                .name(topic.getName())
-                .build();
-    }
 
     public static Topic fromName(String name) {
         return Topic.builder()
