@@ -2,6 +2,7 @@ package com.example.bdc.network.trust_connection;
 
 import com.example.bdc.network.user.User;
 import lombok.*;
+import org.hibernate.validator.constraints.Range;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -27,6 +28,7 @@ public class TrustConnection {
     @Column
     @Getter
     @Setter
+    @Range(min=1, max=10)
     private Integer level;
 
     public TrustConnection(User from, User to, Integer level) {
@@ -38,6 +40,10 @@ public class TrustConnection {
 
     public String getToName() {
         return to.getName();
+    }
+
+    public User getTargetUser() {
+        return to;
     }
 
     @AllArgsConstructor

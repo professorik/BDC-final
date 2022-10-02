@@ -1,8 +1,8 @@
 package com.example.bdc.network.user;
 
+import com.example.bdc.network.exception.UserAlreadyExistsException;
 import com.example.bdc.network.topic.Topic;
 import com.example.bdc.network.topic.TopicRepository;
-import com.example.bdc.network.trust_connection.TrustConnection;
 import com.example.bdc.network.trust_connection.TrustConnectionRepository;
 import com.example.bdc.network.user.dto.CreateUserDto;
 import com.example.bdc.network.user.dto.UserDto;
@@ -26,16 +26,14 @@ public class UserService {
     private TrustConnectionRepository connectionRepository;
 
     @Transactional
-    public Optional<UserDto> createUpdateUsers(CreateUserDto userDto) {
-        try {
-            var user = userRepository.findByName(userDto.getName()).orElseGet(() -> User.fromDto(userDto));
-            var topics = topicRepository.saveIfNotExist(userDto.getTopics().stream().map(Topic::fromName).toList());
-
-            user.getTopics().addAll(topics);
-            return Optional.of(UserDto.fromEntity(userRepository.save(user)));
-        } catch (Exception e) {
-            return Optional.empty();
+    public UserDto createUpdateUsers(CreateUserDto userDto) {
+        if (userRepository.findByName(userDto.getName()).isPresent()) {
+            throw new UserAlreadyExistsException();
         }
+        var user = User.fromDto(userDto);
+        var topics = topicRepository.saveIfNotExist(userDto.getTopics().stream().map(Topic::fromName).toList());
+        user.getTopics().addAll(topics);
+        return UserDto.fromEntity(userRepository.save(user));
     }
 
     @Transactional
@@ -44,6 +42,7 @@ public class UserService {
         connections.forEach((toName, level) -> {
             if (toName.equals(name)) return;
             var beneficiary = userRepository.findByName(toName);
+            //FIXME: throw exception if user doesn't exist
             beneficiary.ifPresent(user -> connectionRepository.save(benefactor, user, level));
         });
         System.out.println(benefactor);
