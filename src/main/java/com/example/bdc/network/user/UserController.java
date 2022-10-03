@@ -1,6 +1,5 @@
 package com.example.bdc.network.user;
 
-import com.example.bdc.network.user.dto.CreateUserDto;
 import com.example.bdc.network.user.dto.UserDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -19,7 +18,7 @@ public class UserController {
 
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping
-    public UserDto createUpdateUser(@RequestBody CreateUserDto user) {
+    public UserDto createUpdateUser(@RequestBody UserDto user) {
         return userService.createUpdateUsers(user);
     }
 

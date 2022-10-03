@@ -46,6 +46,10 @@ public class TrustConnection {
         return to;
     }
 
+    /**
+     * This class implements the primary key.
+     * Consist of 2 primary keys: {@code benefactor_id, beneficiary_id}
+     */
     @AllArgsConstructor
     @NoArgsConstructor
     @Embeddable

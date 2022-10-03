@@ -8,6 +8,10 @@ import lombok.NoArgsConstructor;
 import java.util.HashSet;
 import java.util.Set;
 
+/**
+ * This class stores a message for being
+ * mapped from/to JSON.
+ */
 @Data
 @AllArgsConstructor
 @NoArgsConstructor

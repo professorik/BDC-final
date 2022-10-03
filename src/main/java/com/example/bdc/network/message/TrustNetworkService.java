@@ -1,7 +1,7 @@
 package com.example.bdc.network.message;
 
 import com.example.bdc.network.message.dto.MessageDto;
-import com.example.bdc.network.message.dto.ResponseDto;
+import com.example.bdc.network.message.dto.PathResponseDto;
 import com.example.bdc.network.topic.Topic;
 import com.example.bdc.network.trust_connection.TrustConnection;
 import com.example.bdc.network.user.User;
@@ -26,10 +26,10 @@ public class TrustNetworkService {
         return result;
     }
 
-    public ResponseDto findPath(MessageDto message) {
+    public PathResponseDto findPath(MessageDto message) {
         var from = userRepository.findByName(message.getPersonId()).orElseThrow();
         var path = bfs(message.getLevel(), message.getTopics(), from).orElseThrow();
-        return new ResponseDto(message.getPersonId(), path);
+        return new PathResponseDto(message.getPersonId(), path);
     }
 
     private void dfs(User vertex, final Integer lvl, final Set<String> topics, Map<String, Set<String>> res, final boolean bonus) {

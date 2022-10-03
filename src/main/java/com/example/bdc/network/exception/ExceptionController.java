@@ -1,5 +1,7 @@
 package com.example.bdc.network.exception;
 
+import com.example.bdc.network.exception.entities.BadRequestException;
+import com.example.bdc.network.exception.entities.InvalidUserException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -11,6 +13,10 @@ import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
 import java.util.*;
 
+/**
+ * This class implements the exception controller, marked by {@code @ControllerAdvice, @RestController}.
+ * It also has the logger to debug.
+ */
 @Slf4j
 @ControllerAdvice
 @RestController
@@ -20,7 +26,7 @@ public class ExceptionController {
      * Constraint violation exception handler
      *
      * @param ex ConstraintViolationException
-     * @return Map<String, String> - error head and its description
+     * @return Map<String, String> - error head and its joined descriptions
      * from set of ConstraintViolation
      */
     @ResponseStatus(HttpStatus.UNPROCESSABLE_ENTITY)
@@ -31,15 +37,27 @@ public class ExceptionController {
         return Map.of("error", String.join("\n", errors));
     }
 
+    /**
+     * Bad Request exception handler
+     *
+     * @param e Error
+     * @return Map<String, String> - error head and its description
+     */
     @ExceptionHandler({BadRequestException.class})
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    Map<String, String> errorHandler(Exception e) {
+    Map<String, String> badRequestHandler(Exception e) {
         return Map.of("error", e.getMessage());
     }
 
-    @ExceptionHandler(UserAlreadyExistsException.class)
+    /**
+     * Invalid user exceptions handler
+     *
+     * @param e Exception
+     * @return Map<String, String> - error head and its description
+     */
+    @ExceptionHandler(InvalidUserException.class)
     @ResponseStatus(HttpStatus.UNPROCESSABLE_ENTITY)
-    Map<String, String> badAuthHandler(Exception e) {
+    Map<String, String> invalidUserHandler(Exception e) {
         return Map.of("error", e.getMessage());
     }
 }

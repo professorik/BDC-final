@@ -1,4 +1,4 @@
-package com.example.bdc.network.exception;
+package com.example.bdc.network.exception.entities;
 
 import lombok.*;
 
@@ -9,8 +9,4 @@ import lombok.*;
 public class ValidationException extends BadRequestException{
 
     private String error;
-
-    public ValidationException() {
-        super("field validation has failed");
-    }
 }

@@ -5,9 +5,13 @@ import lombok.Data;
 
 import java.util.List;
 
+/**
+ * This class stores a path for being
+ * mapped to JSON.
+ */
 @Data
 @AllArgsConstructor
-public class ResponseDto {
+public class PathResponseDto {
 
     private final String from;
 

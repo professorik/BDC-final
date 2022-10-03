@@ -9,6 +9,10 @@ import lombok.Data;
 
 import java.util.List;
 
+/**
+ * This class stores a user for being
+ * mapped from/to JSON args.
+ */
 @Builder
 @Data
 @JsonPropertyOrder({"id", "topics"})

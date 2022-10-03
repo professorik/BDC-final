@@ -1,10 +1,11 @@
 package com.example.bdc.network.user;
 
-import com.example.bdc.network.exception.*;
+import com.example.bdc.network.exception.entities.InvalidUserException;
+import com.example.bdc.network.exception.entities.UserAlreadyExistsException;
+import com.example.bdc.network.exception.entities.UserDoesNotExistException;
 import com.example.bdc.network.topic.Topic;
 import com.example.bdc.network.topic.TopicRepository;
 import com.example.bdc.network.trust_connection.TrustConnectionRepository;
-import com.example.bdc.network.user.dto.CreateUserDto;
 import com.example.bdc.network.user.dto.UserDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -25,7 +26,7 @@ public class UserService {
     private TrustConnectionRepository connectionRepository;
 
     @Transactional
-    public UserDto createUpdateUsers(CreateUserDto userDto) {
+    public UserDto createUpdateUsers(UserDto userDto) {
         if (userRepository.findByName(userDto.getName()).isPresent())
             throw new UserAlreadyExistsException();
 

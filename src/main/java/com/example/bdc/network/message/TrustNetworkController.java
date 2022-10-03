@@ -1,8 +1,7 @@
 package com.example.bdc.network.message;
 
 import com.example.bdc.network.message.dto.MessageDto;
-import com.example.bdc.network.message.dto.ResponseDto;
-import lombok.Value;
+import com.example.bdc.network.message.dto.PathResponseDto;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -30,7 +29,7 @@ public class TrustNetworkController {
 
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping("path")
-    public ResponseDto findPath(@RequestBody MessageDto message) {
+    public PathResponseDto findPath(@RequestBody MessageDto message) {
         return service.findPath(message);
     }
 }

@@ -29,6 +29,13 @@ public class Topic {
     @Builder.Default
     private Set<User> users = new HashSet<>();
 
+    /**
+     * Topic builder.
+     *
+     * @param name String
+     * @return Topic - topic with such name
+     * Only for saving in DB.
+     */
     public static Topic fromName(String name) {
         return Topic.builder()
                 .name(name)

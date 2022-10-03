@@ -2,7 +2,7 @@ package com.example.bdc.network.user;
 
 import com.example.bdc.network.topic.Topic;
 import com.example.bdc.network.trust_connection.TrustConnection;
-import com.example.bdc.network.user.dto.CreateUserDto;
+import com.example.bdc.network.user.dto.UserDto;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -42,7 +42,7 @@ public class User {
     @Builder.Default
     private Set<TrustConnection> connections = new HashSet<>();
 
-    public static User fromDto(CreateUserDto user) {
+    public static User fromDto(UserDto user) {
         return User.builder()
                 .name(user.getName())
                 .build();

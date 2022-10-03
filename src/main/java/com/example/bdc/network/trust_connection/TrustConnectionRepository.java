@@ -7,20 +7,47 @@ import org.springframework.data.jpa.repository.Modifying;
 import javax.transaction.Transactional;
 import java.util.Optional;
 
-
+/**
+ * This interface describes JpaRepository with TrustConnection as an entity
+ * and TrustConnectionPK as a primary key.
+ * @see TrustConnection
+ * @see TrustConnection.TrustConnectionPK
+ */
 public interface TrustConnectionRepository extends JpaRepository<TrustConnection, TrustConnection.TrustConnectionPK> {
 
+    /**
+     * Creates or updates a connection in DB.
+     * If there's no such connection {@code from -> to}
+     * creates a new connection or updates {@code level}
+     * otherwise.
+     *
+     * @param from User AKA benefactor
+     * @param to User AKA beneficiary
+     * @param level Integer trust level
+     * @see TrustConnection
+     */
     @Transactional
     @Modifying
     default void save(User from, User to, Integer level) {
         var connection = findByFromAndTo(from, to);
-        TrustConnection kar = new TrustConnection(from, to, level);
+        TrustConnection res = new TrustConnection(from, to, level);
         if (connection.isPresent()) {
-            kar = connection.get();
-            kar.setLevel(level);
+            res = connection.get();
+            res.setLevel(level);
         }
-        save(kar);
+        save(res);
     }
 
+    /**
+     * Creates or updates a connection in DB.
+     * If there's no such connection {@code from -> to}
+     * creates a new connection or updates {@code level}
+     * otherwise.
+     *
+     * @param from User AKA benefactor
+     * @param to User AKA beneficiary
+     * @return Optional<TrustConnection>
+     * @see TrustConnection
+     */
     Optional<TrustConnection> findByFromAndTo(User from, User to);
 }
