@@ -1,0 +1,41 @@
+version: '3.1'
+services:
+  app:
+    image: app
+    build:
+      context: .
+    container_name: app
+    depends_on:
+      - flyway
+      - postgresqldb
+    ports:
+      - "8080:8080"
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgresqldb:5432/dev-challenge
+      - SPRING_DATASOURCE_USERNAME=postgres
+      - SPRING_DATASOURCE_PASSWORD=postgres
+      - SPRING_JPA_HIBERNATE_DDL_AUTO=update
+  flyway:
+    image: boxfuse/flyway:5-alpine
+    command: -url=jdbc:postgresql://postgresqldb:5432/dev-challenge -schemas=public -user=postgres -password=postgres migrate
+    volumes:
+      - ./migration:/flyway/sql
+    depends_on:
+      - postgresqldb
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=postgresqldb
+      - POSTGRES_HOST=postgres
+      - POSTGRES_PORT=5432
+      - POSTGRES_SCHEMA=public
+  postgresqldb:
+    image: 'postgres:13.1-alpine'
+    restart: always
+    container_name: postgresqldb
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_USER: postgres
+      POSTGRES_DB: dev-challenge

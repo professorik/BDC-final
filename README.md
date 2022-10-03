@@ -4,7 +4,9 @@
 
 To run the service use:
 
+./gradlew build -x test
 
+docker-compose up -d
 
 ### Endpoints
 
