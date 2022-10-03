@@ -32,14 +32,15 @@ public class TrustNetworkService {
         return new PathResponseDto(message.getPersonId(), path);
     }
 
-    private void dfs(User vertex, User source, final Integer lvl,
+    private void dfs(User current, User source, final Integer lvl,
                      final Set<String> topics, Map<String, Set<String>> res,
                      Set<String> visited, final boolean bonus) {
 
-        visited.add(vertex.getName());
-        res.put(source.getName(), new HashSet<>());
+        visited.add(current.getName());
+        if (!res.containsKey(source.getName()))
+            res.put(source.getName(), new HashSet<>());
 
-        for (TrustConnection con : vertex.getConnections()) {
+        for (TrustConnection con : current.getConnections()) {
             var tmp = con.getTargetUser();
             if (visited.contains(tmp.getName())) continue;
             if (con.getLevel() >= lvl) {
@@ -49,6 +50,7 @@ public class TrustNetworkService {
                 } else if (bonus)
                     dfs(tmp, source, lvl, topics, res, visited,true);
             }
+            visited.add(tmp.getName());
         }
         if (res.get(source.getName()).isEmpty()) {
             res.remove(source.getName());
