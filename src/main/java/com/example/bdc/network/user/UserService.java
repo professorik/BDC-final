@@ -38,7 +38,7 @@ public class UserService {
 
     @Transactional
     public void addTrustConnection(String name, Map<String, Integer> connections) {
-        var benefactor = userRepository.findByName(name).orElseThrow();
+        var benefactor = userRepository.findByName(name).orElseThrow(UserDoesNotExistException::new);
         connections.forEach((toName, level) -> {
             if (toName.equals(name))
                 throw new InvalidUserException();

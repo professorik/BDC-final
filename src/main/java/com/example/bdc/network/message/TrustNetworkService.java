@@ -1,5 +1,6 @@
 package com.example.bdc.network.message;
 
+import com.example.bdc.network.exception.entities.UserDoesNotExistException;
 import com.example.bdc.network.message.dto.MessageDto;
 import com.example.bdc.network.message.dto.PathResponseDto;
 import com.example.bdc.network.topic.Topic;
@@ -20,17 +21,18 @@ public class TrustNetworkService {
     private UserRepository userRepository;
 
     public Map<String, Set<String>> addMessage(MessageDto message, boolean bonus) {
-        var from = userRepository.findByName(message.getPersonId()).orElseThrow();
+        var from = userRepository.findByName(message.getPersonId()).orElseThrow(UserDoesNotExistException::new);
         Map<String, Set<String>> result = new HashMap<>();
         dfs(from, from, message.getLevel(), message.getTopics(), result, new HashSet<>(), bonus);
         return result;
     }
 
     public PathResponseDto findPath(MessageDto message) {
-        var from = userRepository.findByName(message.getPersonId()).orElseThrow();
+        var from = userRepository.findByName(message.getPersonId()).orElseThrow(UserDoesNotExistException::new);
         var path = bfs(message.getLevel(), message.getTopics(), from).orElseThrow();
         return new PathResponseDto(message.getPersonId(), path);
     }
+
 
     private void dfs(User current, User source, final Integer lvl,
                      final Set<String> topics, Map<String, Set<String>> res,
@@ -52,7 +54,7 @@ public class TrustNetworkService {
             }
             visited.add(tmp.getName());
         }
-        if (res.get(source.getName()).isEmpty()) {
+        if (current.equals(source) && res.get(source.getName()).isEmpty()) {
             res.remove(source.getName());
         }
     }
