@@ -22,7 +22,7 @@ public class TrustNetworkService {
     public Map<String, Set<String>> addMessage(MessageDto message, boolean bonus) {
         var from = userRepository.findByName(message.getPersonId()).orElseThrow();
         Map<String, Set<String>> result = new HashMap<>();
-        dfs(from, message.getLevel(), message.getTopics(), result, bonus);
+        dfs(from, from, message.getLevel(), message.getTopics(), result, new HashSet<>(), bonus);
         return result;
     }
 
@@ -32,24 +32,26 @@ public class TrustNetworkService {
         return new PathResponseDto(message.getPersonId(), path);
     }
 
-    private void dfs(User vertex, final Integer lvl, final Set<String> topics, Map<String, Set<String>> res, final boolean bonus) {
-        res.put(vertex.getName(), new HashSet<>());
+    private void dfs(User vertex, User source, final Integer lvl,
+                     final Set<String> topics, Map<String, Set<String>> res,
+                     Set<String> visited, final boolean bonus) {
+
+        visited.add(vertex.getName());
+        res.put(source.getName(), new HashSet<>());
 
         for (TrustConnection con : vertex.getConnections()) {
             var tmp = con.getTargetUser();
-            if (res.containsKey(tmp.getName())) continue;
+            if (visited.contains(tmp.getName())) continue;
             if (con.getLevel() >= lvl) {
                 if (tmp.getTopics().stream().map(Topic::getName).toList().containsAll(topics)) {
-                    res.get(vertex.getName()).add(tmp.getName());
-                    if (!bonus)
-                        dfs(tmp, lvl, topics, res, false);
-                }
-                if (bonus)
-                    dfs(tmp, lvl, topics, res, true);
+                    res.get(source.getName()).add(tmp.getName());
+                    dfs(tmp, tmp, lvl, topics, res, visited, bonus);
+                } else if (bonus)
+                    dfs(tmp, source, lvl, topics, res, visited,true);
             }
         }
-        if (res.get(vertex.getName()).isEmpty()) {
-            res.remove(vertex.getName());
+        if (res.get(source.getName()).isEmpty()) {
+            res.remove(source.getName());
         }
     }
 
