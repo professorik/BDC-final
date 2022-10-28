@@ -1,4 +1,4 @@
-package com.example.bdc.network.exception.entities;
+package com.example.bdc.exception;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -11,12 +11,5 @@ public class BadRequestException extends RuntimeException {
      */
     public BadRequestException(String message) {
         super(message);
-    }
-
-    /** Constructs a new bad request exception with {@code "Bad request"} as its
-     * detail message.
-     */
-    public BadRequestException() {
-        super("Bad request");
     }
 }

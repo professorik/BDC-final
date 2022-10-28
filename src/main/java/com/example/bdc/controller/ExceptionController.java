@@ -1,9 +1,10 @@
-package com.example.bdc.network.exception;
+package com.example.bdc.controller;
 
-import com.example.bdc.network.exception.entities.BadRequestException;
-import com.example.bdc.network.exception.entities.InvalidUserException;
+import com.example.bdc.exception.BadRequestException;
+import com.example.bdc.exception.UnprocessableEntityException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -13,11 +14,6 @@ import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
 import java.util.*;
 
-/**
- * This class implements the exception controller, marked by {@code @ControllerAdvice, @RestController}.
- * It also has the logger to debug.
- */
-@Slf4j
 @ControllerAdvice
 @RestController
 public class ExceptionController {
@@ -33,7 +29,6 @@ public class ExceptionController {
     @ExceptionHandler(ConstraintViolationException.class)
     public Map<String, String> handleConstraintViolation(ConstraintViolationException ex) {
         var errors = ex.getConstraintViolations().stream().map(ConstraintViolation::getMessage).toList();
-        log.debug("errors", errors);
         return Map.of("error", String.join("\n", errors));
     }
 
@@ -43,21 +38,14 @@ public class ExceptionController {
      * @param e Error
      * @return Map<String, String> - error head and its description
      */
-    @ExceptionHandler({BadRequestException.class})
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    Map<String, String> badRequestHandler(Exception e) {
-        return Map.of("error", e.getMessage());
-    }
-
-    /**
-     * Invalid user exceptions handler
-     *
-     * @param e Exception
-     * @return Map<String, String> - error head and its description
-     */
-    @ExceptionHandler(InvalidUserException.class)
     @ResponseStatus(HttpStatus.UNPROCESSABLE_ENTITY)
-    Map<String, String> invalidUserHandler(Exception e) {
-        return Map.of("error", e.getMessage());
+    @ExceptionHandler({UnprocessableEntityException.class, BadRequestException.class})
+    Map<String, String> badRequestHandler(Exception e) {
+        Map<String, String> res = new HashMap<>();
+        res.put("error", e.getMessage());
+        if (e instanceof UnprocessableEntityException) {
+            res.put("details", ((UnprocessableEntityException) e).getDetails());
+        }
+        return res;
     }
 }
